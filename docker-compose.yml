@@ -1,0 +1,39 @@
+version: '2'
+services:
+  redis-master-host:
+    environment:
+      redis_port: '16379'
+    labels:
+      io.rancher.container.pull_image: always
+    tty: true
+    image: test/redis
+    stdin_open: true
+    network_mode: "host"
+  redis-slaves:
+    environment:
+      master_port: '16379'
+      redis_port: '16380'
+    labels:
+      io.rancher.scheduler.affinity:container_label_soft_ne: name=slaves
+      io.rancher.container.pull_image: always
+      name: slaves
+    tty: true
+    command:
+      - slave
+    image: test/redis
+    stdin_open: true
+    network_mode: "host"
+  redis-sentinels:
+    environment:
+      master_port: '16379'
+      sentinel_port: '16381'
+    labels:
+      io.rancher.container.pull_image: always
+      name: sentinels
+      io.rancher.scheduler.affinity:container_label_ne: name=sentinels
+    tty: true
+    command:
+      - sentinel
+    image: test/redis
+    stdin_open: true
+    network_mode: "host"
