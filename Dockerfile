@@ -1,4 +1,4 @@
-FROM redis:latest
+FROM redis:3-alpine
 MAINTAINER xuxiang <downloadxu@163.com>
 USER root
 COPY Shanghai /etc/localtime
